@@ -8,6 +8,7 @@ from httpx import AsyncClient
 
 from app.db.repositories.users import UsersRepository
 from app.models.domain.users import UserInDB
+from app.services import jwt
 from tests.fake_asyncpg_pool import FakeAsyncPGPool
 
 environ["APP_ENV"] = "test"
@@ -58,6 +59,11 @@ async def test_user(pool: Pool) -> UserInDB:
         return await UsersRepository(conn).create_user(
             email="test@test.com", password="password", username="username"
         )
+
+
+@pytest.fixture
+def token(test_user: UserInDB) -> str:
+    return jwt.create_access_token_for_user(test_user, environ["SECRET_KEY"])
 
 
 @pytest.fixture
