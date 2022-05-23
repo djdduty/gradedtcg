@@ -1,0 +1,423 @@
+{
+	"info": {
+		"_postman_id": "f504dbdb-54ca-4f0f-817b-f5d969c590f1",
+		"name": "Graded TCG Tracker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (!(environment.isIntegrationTest)) {\r",
+									"var responseJSON = JSON.parse(responseBody);\r",
+									"\r",
+									"tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');\r",
+									"\r",
+									"var user = responseJSON.user || {};\r",
+									"\r",
+									"tests['User has \"email\" property'] = user.hasOwnProperty('email');\r",
+									"tests['User has \"username\" property'] = user.hasOwnProperty('username');\r",
+									"tests['User has \"bio\" property'] = user.hasOwnProperty('bio');\r",
+									"tests['User has \"image\" property'] = user.hasOwnProperty('image');\r",
+									"tests['User has \"token\" property'] = user.hasOwnProperty('token');\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "XMLHttpRequest",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"email\": \"{{EMAIL}}\",\r\n        \"password\": \"{{PASSWORD}}\",\r\n        \"username\": \"{{USERNAME}}\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "{{APIURL}}/users",
+							"host": [
+								"{{APIURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseJSON = JSON.parse(responseBody);\r",
+									"\r",
+									"tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');\r",
+									"\r",
+									"var user = responseJSON.user || {};\r",
+									"\r",
+									"tests['User has \"email\" property'] = user.hasOwnProperty('email');\r",
+									"tests['User has \"username\" property'] = user.hasOwnProperty('username');\r",
+									"tests['User has \"bio\" property'] = user.hasOwnProperty('bio');\r",
+									"tests['User has \"image\" property'] = user.hasOwnProperty('image');\r",
+									"tests['User has \"token\" property'] = user.hasOwnProperty('token');\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "XMLHttpRequest",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"email\": \"{{EMAIL}}\",\r\n        \"password\": \"{{PASSWORD}}\"\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "{{APIURL}}/users/login",
+							"host": [
+								"{{APIURL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login and Remember Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseJSON = JSON.parse(responseBody);\r",
+									"\r",
+									"tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');\r",
+									"\r",
+									"var user = responseJSON.user || {};\r",
+									"\r",
+									"tests['User has \"email\" property'] = user.hasOwnProperty('email');\r",
+									"tests['User has \"username\" property'] = user.hasOwnProperty('username');\r",
+									"tests['User has \"bio\" property'] = user.hasOwnProperty('bio');\r",
+									"tests['User has \"image\" property'] = user.hasOwnProperty('image');\r",
+									"tests['User has \"token\" property'] = user.hasOwnProperty('token');\r",
+									"\r",
+									"if(tests['User has \"token\" property']){\r",
+									"    pm.globals.set('token', user.token);\r",
+									"}\r",
+									"\r",
+									"tests['Global variable \"token\" has been set'] = pm.globals.get('token') === user.token;\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "XMLHttpRequest",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"user\":{\"email\":\"{{EMAIL}}\", \"password\":\"{{PASSWORD}}\"}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{APIURL}}/users/login",
+							"host": [
+								"{{APIURL}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Current User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseJSON = JSON.parse(responseBody);\r",
+									"\r",
+									"tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');\r",
+									"\r",
+									"var user = responseJSON.user || {};\r",
+									"\r",
+									"tests['User has \"email\" property'] = user.hasOwnProperty('email');\r",
+									"tests['User has \"username\" property'] = user.hasOwnProperty('username');\r",
+									"tests['User has \"bio\" property'] = user.hasOwnProperty('bio');\r",
+									"tests['User has \"image\" property'] = user.hasOwnProperty('image');\r",
+									"tests['User has \"token\" property'] = user.hasOwnProperty('token');\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "XMLHttpRequest",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{APIURL}}/user",
+							"host": [
+								"{{APIURL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var responseJSON = JSON.parse(responseBody);",
+									"",
+									"tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+									"",
+									"var user = responseJSON.user || {};",
+									"",
+									"tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+									"tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+									"tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+									"tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+									"tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"user\":{\"email\":\"{{EMAIL}}\"}}"
+						},
+						"url": {
+							"raw": "{{APIURL}}/user",
+							"host": [
+								"{{APIURL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profiles",
+			"item": [
+				{
+					"name": "Register Celeb",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (!(environment.isIntegrationTest)) {",
+									"var responseJSON = JSON.parse(responseBody);",
+									"",
+									"tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+									"",
+									"var user = responseJSON.user || {};",
+									"",
+									"tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+									"tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+									"tests['User has \"bio\" property'] = user.hasOwnProperty('bio');",
+									"tests['User has \"image\" property'] = user.hasOwnProperty('image');",
+									"tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+									"}",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "XMLHttpRequest"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"user\":{\"email\":\"celeb_{{EMAIL}}\", \"password\":\"{{PASSWORD}}\", \"username\":\"celeb_{{USERNAME}}\"}}"
+						},
+						"url": {
+							"raw": "{{APIURL}}/users",
+							"host": [
+								"{{APIURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (!(environment.isIntegrationTest)) {",
+									"var is200Response = responseCode.code === 200;",
+									"",
+									"tests['Response code is 200 OK'] = is200Response;",
+									"",
+									"if(is200Response){",
+									"    var responseJSON = JSON.parse(responseBody);",
+									"",
+									"    tests['Response contains \"profile\" property'] = responseJSON.hasOwnProperty('profile');",
+									"    ",
+									"    var profile = responseJSON.profile || {};",
+									"    ",
+									"    tests['Profile has \"username\" property'] = profile.hasOwnProperty('username');",
+									"    tests['Profile has \"bio\" property'] = profile.hasOwnProperty('bio');",
+									"    tests['Profile has \"image\" property'] = profile.hasOwnProperty('image');",
+									"}",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Requested-With",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "Authorization",
+								"value": "Token {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{APIURL}}/profiles/celeb_{{USERNAME}}",
+							"host": [
+								"{{APIURL}}"
+							],
+							"path": [
+								"profiles",
+								"celeb_{{USERNAME}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
