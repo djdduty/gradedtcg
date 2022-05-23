@@ -4,7 +4,6 @@ from fastapi import FastAPI
 from httpx import AsyncClient
 from starlette import status
 
-from app.db.repositories.profiles import ProfilesRepository
 from app.db.repositories.users import UsersRepository
 from app.models.domain.users import UserInDB
 from app.models.schemas.profiles import ProfileInResponse
@@ -42,9 +41,7 @@ async def test_user_will_receive_profile(
 
 @pytest.mark.parametrize(
     "api_method, route_name",
-    (
-        ("GET", "profiles:get-profile"),
-    ),
+    (("GET", "profiles:get-profile"),),
 )
 async def test_user_can_not_retrieve_not_existing_profile(
     app: FastAPI, authorized_client: AsyncClient, api_method: str, route_name: str

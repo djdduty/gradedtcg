@@ -5,10 +5,10 @@ Revises:
 Create Date: 2019-09-22 01:36:44.791880
 
 """
+import uuid
 from typing import Tuple
 
 import sqlalchemy as sa
-import uuid
 from alembic import op
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import UUID
@@ -95,8 +95,15 @@ def create_tcgs_table() -> None:
 def create_sets_table() -> None:
     op.create_table(
         "sets",
-        sa.Column("uuid", UUID(as_uuid=True), primary_key=True, unique=True, nullable=False),
-        sa.Column("tcg_id", sa.Text, sa.ForeignKey("tcgs.name_en", ondelete="CASCADE"), nullable=False),
+        sa.Column(
+            "uuid", UUID(as_uuid=True), primary_key=True, unique=True, nullable=False
+        ),
+        sa.Column(
+            "tcg_id",
+            sa.Text,
+            sa.ForeignKey("tcgs.name_en", ondelete="CASCADE"),
+            nullable=False,
+        ),
         sa.Column("code", sa.Text, nullable=False, unique=True, index=True),
         *timestamps(),
     )
@@ -114,9 +121,23 @@ def create_sets_table() -> None:
 def create_cards_table() -> None:
     op.create_table(
         "cards",
-        sa.Column("uuid", UUID(as_uuid=True), primary_key=True, unique=True, nullable=False),
-        sa.Column("tcg_id", sa.Text, sa.ForeignKey("tcgs.name_en", ondelete="CASCADE"), nullable=False, index=True),
-        sa.Column("set_id", UUID(as_uuid=True), sa.ForeignKey("sets.uuid", ondelete="CASCADE"), nullable=False, index=True),
+        sa.Column(
+            "uuid", UUID(as_uuid=True), primary_key=True, unique=True, nullable=False
+        ),
+        sa.Column(
+            "tcg_id",
+            sa.Text,
+            sa.ForeignKey("tcgs.name_en", ondelete="CASCADE"),
+            nullable=False,
+            index=True,
+        ),
+        sa.Column(
+            "set_id",
+            UUID(as_uuid=True),
+            sa.ForeignKey("sets.uuid", ondelete="CASCADE"),
+            nullable=False,
+            index=True,
+        ),
         sa.Column("collector_number", sa.Integer, nullable=False, index=True),
         sa.Column("name_en", sa.Text, primary_key=True),
         *timestamps(),
@@ -136,23 +157,41 @@ def create_collectibles_table() -> None:
     op.create_table(
         "collectibles",
         sa.Column("id", sa.Integer, nullable=False),
-        sa.Column("owner_id", sa.Integer, sa.ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True),
-        sa.Column("uuid", UUID(as_uuid=True), default=uuid.uuid4, index=True, nullable=False),
+        sa.Column(
+            "owner_id",
+            sa.Integer,
+            sa.ForeignKey("users.id", ondelete="CASCADE"),
+            nullable=False,
+            index=True,
+        ),
+        sa.Column(
+            "uuid", UUID(as_uuid=True), default=uuid.uuid4, index=True, nullable=False
+        ),
         sa.Column("is_card", sa.Boolean, nullable=False),
         sa.Column("is_graded", sa.Boolean, nullable=False),
         sa.Column("is_shared", sa.Boolean, nullable=False, default=False),
-
         # Sealed product meta
         sa.Column("name", sa.Text),
         sa.Column("description", sa.Text),
-
         # Card common meta
-        sa.Column("card_id", UUID(as_uuid=True), sa.ForeignKey("cards.uuid", ondelete="SET NULL"), index=True, nullable=True, unique=False),
-        sa.Column("set_id", UUID(as_uuid=True), sa.ForeignKey("sets.uuid", ondelete="SET NULL"), index=True, nullable=True, unique=False),
-        
+        sa.Column(
+            "card_id",
+            UUID(as_uuid=True),
+            sa.ForeignKey("cards.uuid", ondelete="SET NULL"),
+            index=True,
+            nullable=True,
+            unique=False,
+        ),
+        sa.Column(
+            "set_id",
+            UUID(as_uuid=True),
+            sa.ForeignKey("sets.uuid", ondelete="SET NULL"),
+            index=True,
+            nullable=True,
+            unique=False,
+        ),
         # Ungraded meta
         sa.Column("quantity", sa.Integer, default=1, nullable=False),
-
         # Graded meta
         sa.Column("grade_overall", sa.Numeric(3, 1), nullable=True),
         sa.Column("grade_centering", sa.Numeric(3, 1), nullable=True),
@@ -162,13 +201,10 @@ def create_collectibles_table() -> None:
         sa.Column("grade_signature", sa.Numeric(3, 1), nullable=True),
         sa.Column("grade_org", sa.Text, nullable=True),
         sa.Column("grade_serial_no", sa.Text, nullable=True),
-
         # Timestamps
         *timestamps(),
     )
-    op.create_primary_key(
-        "pk_collectibles", "collectibles", ["id", "owner_id"]
-    )
+    op.create_primary_key("pk_collectibles", "collectibles", ["id", "owner_id"])
     op.execute(
         """
         ALTER TABLE collectibles
