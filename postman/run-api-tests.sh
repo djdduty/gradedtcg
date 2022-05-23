@@ -8,7 +8,7 @@ USERNAME=${USERNAME:-u`date +%s`}
 EMAIL=${EMAIL:-$USERNAME@mail.com}
 PASSWORD=${PASSWORD:-password}
 
-npx newman run $SCRIPTDIR/gradedtcg.postman_collection.json \
+npx -y newman run $SCRIPTDIR/gradedtcg.postman_collection.json \
   --delay-request 500 \
   --global-var "APIURL=$APIURL" \
   --global-var "USERNAME=$USERNAME" \
